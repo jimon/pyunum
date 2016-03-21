@@ -110,7 +110,7 @@ def ceil(x):
 
 
 def unumQ(x):
-    if isinstance(x, (int, long)):
+    if isinstance(x, (int)):
         if x >= 0 and x <= sNaNu:
             return True
     return False
@@ -143,7 +143,7 @@ def unum2g(u):
             return ((x, y), (open, open))
 
 def floatQ(x):
-    if math.isnan(x) or math.isinf(x) or isinstance(x, (Fraction, int, long, float)):
+    if math.isnan(x) or math.isinf(x) or isinstance(x, (Fraction, int, float)):
         return True
     return False
 
@@ -367,7 +367,7 @@ def x2u(x):
                 except:
                     pass
                 if z and z.is_integer() and z >= 0:
-                    z = long(z)
+                    z = int(z)
                     return (z << fsizesize) + ulpu + (x < 0) * signmask(z << fsizesize)
                 else:
                     return y1
@@ -1249,7 +1249,7 @@ def coalescepass(set):
     while j < ndim:
         i = 0
         while i < len(gset):
-            print i, len(gset)
+            print(i, len(gset))
             g = gset[i]
             if g[j][1] == (open, open):
                 width = g[j][0][1] - g[j][0][0]
@@ -1276,7 +1276,7 @@ def coalescepass(set):
 def coalesce(s):
     newset = s
     while coalescepass(newset) != newset:
-        print 'coal', newset
+        print('coal', newset)
         newset = coalescepass(newset)
     return newset
 
@@ -1527,7 +1527,7 @@ def ubinsert(ubset, ub):
             # print "   First element. ", view(ub)
             return (ub,)
         j = k
-        print "searching for matches"
+        print("searching for matches")
         # XXX: this could be written in a much more pythonic style
         while j > 0 and gtuQ(newset[j-1], ub):
             j -= 1
@@ -1537,15 +1537,15 @@ def ubinsert(ubset, ub):
             righttouch = nnequQ((nborlo(newset[j][0], float('-inf')),), ub)
         if lefttouch and righttouch:
             newset = drop(newset, (j-1, k-1)) + [(newset[j-1][0], newset[j][-1])] + drop(newset, (0, j))
-            print "   Joined on both sides. "
+            print("   Joined on both sides. ")
         elif lefttouch and not righttouch:
             newset = drop(newset, (j-1, k-1)) + [(newset[j+1][0], ub[-1])] + drop(newset, (0, j-1))
-            print "   Joined on left side. "
+            print("   Joined on left side. ")
         elif not lefttouch and righttouch:
             newset = drop(newset, (j, k-1)) + [(ub[-1], newset[j][-1])] + drop(newset, (0, j))
-            print "   Joined on right side. "
+            print("   Joined on right side. ")
         else:
-            print "   Inserted new ubound, not touching"
+            print("   Inserted new ubound, not touching")
             if j + 1 > k:
                 newset = newset + (ub,) + drop(newset, (0, j-1))
             else:
@@ -1558,22 +1558,22 @@ def ubinsert(ubset, ub):
 def solveforub(domain, conditionQ):
     sols = []
     trials = domain
-    print "COND-d", domain
+    print("COND-d", domain)
     while len(trials) > 0:
         new = []
         for ub in trials:
             b = conditionQ(ub)
-            print "COND", b, view(ub), ub
+            print("COND", b, view(ub), ub)
             if b:
                 temp = splitub(ub)
                 if len(temp) == 1:
                     # unsplittable. Join to existing region or start new one.
                     sols = ubinsert(sols, temp[0])
-                    print "joined", view(ub), "to sols: ", "".join([view(sol) for sol in sols])
+                    print("joined", view(ub), "to sols: ", "".join([view(sol) for sol in sols]))
                 else:
                     new = temp + new
         trials = new
-        print "The 'new' list:", [view(i) for i in new]
+        print("The 'new' list:", [view(i) for i in new])
     return sols
 
 ubitsmoved = numbersmoved = 0
