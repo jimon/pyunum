@@ -110,7 +110,7 @@ def ceil(x):
 
 
 def unumQ(x):
-    if isinstance(x, (int)):
+    if isinstance(x, int):
         if x >= 0 and x <= sNaNu:
             return True
     return False
